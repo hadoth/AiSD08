@@ -1,0 +1,170 @@
+package graph.edge;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+
+/**
+ * Created by Karol Pokomeda on 2017-06-06.
+ */
+public class IncidenceEdgeGraph<T> implements MyEdgeGraph<T> {
+    private List<T> vertexList;
+    private int[][] coincidenceMatrix;
+
+    public IncidenceEdgeGraph() {
+        this.vertexList = new ArrayList<>();
+        this.coincidenceMatrix = new int[0][0];
+    }
+
+    @Override
+    public boolean addVertex(T t) {
+        if (!this.vertexList.contains(t)) {
+            int[][] newMatrix = this.coincidenceMatrix.length != 0 ? new int[this.coincidenceMatrix.length + 1][this.coincidenceMatrix[0].length] : new int[1][0];
+            for (int i = 0; i < this.coincidenceMatrix.length; i++) {
+                for (int j = 0; j < this.coincidenceMatrix[i].length; j++) {
+                    newMatrix[i][j] = this.coincidenceMatrix[i][j];
+                }
+            }
+            this.coincidenceMatrix = newMatrix;
+            return this.vertexList.add(t);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addEdge(T t1, T t2, int weight) {
+        int start;
+        int end;
+        if (
+                (start = this.vertexList.indexOf(t1)) >= 0
+                        && (end = this.vertexList.indexOf(t2)) >= 0
+                        && !this.hasEdge(t1, t2)
+                ) {
+            int[][] newMatrix = new int[this.coincidenceMatrix.length][this.coincidenceMatrix[0].length+1];
+            for (int i = 0; i < this.coincidenceMatrix.length; i++) {
+                for (int j = 0; j < this.coincidenceMatrix[i].length; j++) {
+                    newMatrix[i][j] = this.coincidenceMatrix[i][j];
+                }
+            }
+            this.coincidenceMatrix = newMatrix;
+            this.coincidenceMatrix[start][this.coincidenceMatrix[start].length - 1] = weight;
+            this.coincidenceMatrix[end][this.coincidenceMatrix[end].length - 1] = weight;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteVertex(T t) {
+        int vertexIndex = this.vertexList.indexOf(t);
+        if (vertexIndex < 0) {
+            return false;
+        }
+        for (int i = 0; i < this.coincidenceMatrix[vertexIndex].length; i++){
+            if (this.coincidenceMatrix[vertexIndex][i] != 0){
+                return false;
+            }
+        }
+        this.vertexList.remove(vertexIndex);
+        int[][] newMatrix = this.coincidenceMatrix.length == 1 ?
+                new int[0][0]
+                : new int[this.coincidenceMatrix.length][this.coincidenceMatrix[0].length];
+        for (int i = 0, iPrim = 0; i < newMatrix.length; i++, iPrim++){
+            for (int j = 0; j < newMatrix[0].length; j++){
+                if (i == vertexIndex){
+                    iPrim++;
+                }
+                newMatrix[i][j] = this.coincidenceMatrix[iPrim][j];
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteEdge(T t1, T t2) {
+        int start;
+        int end;
+        if ((start = this.vertexList.indexOf(t1)) >= 0
+                && (end = this.vertexList.indexOf(t2)) >= 0){
+            int bowIndex = -1;
+            for (int i = 0; i < this.coincidenceMatrix[start].length; i++){
+                if (this.coincidenceMatrix[start][i] != 0 && this.coincidenceMatrix[start][i] == this.coincidenceMatrix[end][i]){
+                    bowIndex = i;
+                }
+            }
+            if (bowIndex >= 0){
+                int[][] newMatrix = new int[this.coincidenceMatrix.length][this.coincidenceMatrix[0].length-1];
+                for (int i = 0; i < newMatrix.length; i++){
+                    for (int j = 0, jPrim = 0; j < newMatrix[0].length; j++, jPrim++){
+                        if (j == bowIndex) {
+                            jPrim++;
+                        }
+                        newMatrix[i][j] = this.coincidenceMatrix[i][jPrim];
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hasVertex(T t) {
+        return this.vertexList.contains(t);
+    }
+
+    @Override
+    public boolean hasEdge(T t1, T t2) {
+        int start;
+        int end;
+        if ((start = this.vertexList.indexOf(t1)) >= 0
+                && (end = this.vertexList.indexOf(t2)) >= 0){
+            for (int i = 0; i < this.coincidenceMatrix[start].length; i++){
+                if (this.coincidenceMatrix[start][i] != 0 && this.coincidenceMatrix[start][i] == this.coincidenceMatrix[end][i]){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int edgeWeight(T t1, T t2) {
+        int start;
+        int end;
+        if ((start = this.vertexList.indexOf(t1)) >= 0
+                && (end = this.vertexList.indexOf(t2)) >= 0){
+            for (int i = 0; i < this.coincidenceMatrix[start].length; i++){
+                if (this.coincidenceMatrix[start][i] != 0 && this.coincidenceMatrix[start][i] == this.coincidenceMatrix[end][i]){
+                    return this.coincidenceMatrix[start][i];
+                }
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public int vertexCount() {
+        return this.vertexList.size();
+    }
+
+    @Override
+    public int edgeCount() {
+        return this.coincidenceMatrix.length != 0 ? this.coincidenceMatrix[0].length : 0;
+    }
+
+    @Override
+    public MyEdgeGraph<T> MST() {
+        return null;
+    }
+
+    @Override
+    public List<T> BFS(T t, Predicate<T> predicate) {
+        return null;
+    }
+
+    @Override
+    public List<T> DFS(T t, Predicate<T> predicate) {
+        return null;
+    }
+}
