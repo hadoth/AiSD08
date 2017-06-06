@@ -48,7 +48,7 @@ public class CoincidenceBowGraph<T> implements MyBowGraph<T> {
             }
             this.coincidenceMatrix = newMatrix;
             this.coincidenceMatrix[start][this.coincidenceMatrix[start].length - 1] = weight;
-            this.coincidenceMatrix[end][this.coincidenceMatrix[end].length - 1] = weight;
+            this.coincidenceMatrix[end][this.coincidenceMatrix[end].length - 1] = -weight;
             return true;
         } else {
             return false;
@@ -89,8 +89,9 @@ public class CoincidenceBowGraph<T> implements MyBowGraph<T> {
                 && (end = this.vertexList.indexOf(t2)) >= 0){
             int bowIndex = -1;
             for (int i = 0; i < this.coincidenceMatrix[start].length; i++){
-                if (this.coincidenceMatrix[start][i] != 0 && this.coincidenceMatrix[start][i] == this.coincidenceMatrix[end][i]){
+                if (this.coincidenceMatrix[start][i] != 0 && this.coincidenceMatrix[start][i] == -this.coincidenceMatrix[end][i]){
                     bowIndex = i;
+                    break;
                 }
             }
             if (bowIndex >= 0){
@@ -120,7 +121,7 @@ public class CoincidenceBowGraph<T> implements MyBowGraph<T> {
         if ((start = this.vertexList.indexOf(t1)) >= 0
                 && (end = this.vertexList.indexOf(t2)) >= 0){
             for (int i = 0; i < this.coincidenceMatrix[start].length; i++){
-                if (this.coincidenceMatrix[start][i] != 0 && this.coincidenceMatrix[start][i] == this.coincidenceMatrix[end][i]){
+                if (this.coincidenceMatrix[start][i] != 0 && this.coincidenceMatrix[start][i] == -this.coincidenceMatrix[end][i]){
                     return true;
                 }
             }
@@ -135,7 +136,7 @@ public class CoincidenceBowGraph<T> implements MyBowGraph<T> {
         if ((start = this.vertexList.indexOf(t1)) >= 0
                 && (end = this.vertexList.indexOf(t2)) >= 0){
             for (int i = 0; i < this.coincidenceMatrix[start].length; i++){
-                if (this.coincidenceMatrix[start][i] != 0 && this.coincidenceMatrix[start][i] == this.coincidenceMatrix[end][i]){
+                if (this.coincidenceMatrix[start][i] != 0 && this.coincidenceMatrix[start][i] == -this.coincidenceMatrix[end][i]){
                     return this.coincidenceMatrix[start][i];
                 }
             }
