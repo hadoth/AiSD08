@@ -1,5 +1,4 @@
-import graph.bow.ListBowGraph;
-import graph.bow.MatrixBowGraph;
+import graph.bow.IncidenceBowGraph;
 import graph.bow.MyBowGraph;
 
 import java.util.Arrays;
@@ -11,7 +10,8 @@ import java.util.List;
 public class ListEightExerciseTwoTestA {
     public static void main(String[] args){
 //        MyBowGraph<Character> myGraph = new MatrixBowGraph<>();
-        MyBowGraph<Character> myGraph = new ListBowGraph<>();
+//        MyBowGraph<Character> myGraph = new ListBowGraph<>();
+        MyBowGraph<Character> myGraph = new IncidenceBowGraph<>();
        char[] characters = {'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x'};
         for (int i = 0; i < characters.length; i++){
             myGraph.addVertex(characters[i]);
@@ -34,23 +34,13 @@ public class ListEightExerciseTwoTestA {
         myGraph.addBow(characters[6],characters[7],8);
         myGraph.addBow(characters[7],characters[8],3);
 
-        MyBowGraph<Character> MST = myGraph.MST();
-
         System.out.println(myGraph);
         System.out.println();
-        System.out.println(MST);
 
         myGraph.deleteBow('u','x');
         myGraph.deleteBow('w','x');
-        try{
-            myGraph.MST();
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-        }
 
         myGraph.deleteVertex('x');
-
-        System.out.println(myGraph.MST());
 
         List<Character> BFS = myGraph.BFS('p', (Character character)->character.equals('w'));
         System.out.println(Arrays.toString(BFS.toArray()));
