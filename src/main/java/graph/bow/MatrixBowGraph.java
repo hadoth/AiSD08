@@ -1,11 +1,5 @@
 package graph.bow;
 
-import utils.comparator.NaturalComparator;
-import utils.Edge;
-import utils.comparator.ReverseComparator;
-import utils.queue.HeapQueue;
-import utils.queue.PriorityQueue;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -127,44 +121,6 @@ public class MatrixBowGraph<T> implements MyBowGraph<T> {
                     result++;
                 }
             }
-        }
-        return result;
-    }
-
-    @Override
-    public MyBowGraph<T> MST() {
-        // create empty graph for new tree representation
-        MyBowGraph<T> result = new MatrixBowGraph<>();
-        if (this.vertexCount() == 0) return result;
-
-        // add first vertex to the tree
-        int index = 0;
-        result.addVertex(this.vertices.get(0));
-
-        // add edges connected with first element to the heap queue
-        PriorityQueue<Edge<T>> edgesToCheck = new HeapQueue<Edge<T>>(new ReverseComparator<Edge<T>>(new NaturalComparator<Edge<T>>()));
-        for (int i = 0; i < this.vertexCount(); i++) {
-            if (this.neighbourMatrix[index][i] != 0) {
-                edgesToCheck.add(new Edge<>(this.vertices.get(index), this.vertices.get(i), this.neighbourMatrix[index][i]));
-            }
-        }
-
-        while (!edgesToCheck.isEmpty()) {
-            Edge<T> edge = edgesToCheck.remove();
-            if (!result.hasVertex(edge.getDestination())) {
-                result.addVertex(edge.getDestination());
-                result.addBow(edge.getSource(), edge.getDestination(), edge.getWeight());
-                index = this.vertices.indexOf(edge.getDestination());
-                for (int i = 0; i < this.vertexCount(); i++) {
-                    if (this.neighbourMatrix[index][i] != 0) {
-                        edgesToCheck.add(new Edge<>(this.vertices.get(index), this.vertices.get(i), this.neighbourMatrix[index][i]));
-                    }
-                }
-            }
-        }
-
-        if (result.vertexCount() != this.vertexCount()) {
-            throw new NullPointerException("Graph is not consistent");
         }
         return result;
     }

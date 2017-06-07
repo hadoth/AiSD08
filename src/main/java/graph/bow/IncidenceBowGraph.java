@@ -155,11 +155,6 @@ public class IncidenceBowGraph<T> implements MyBowGraph<T> {
     }
 
     @Override
-    public MyBowGraph<T> MST() {
-        return null;
-    }
-
-    @Override
     public List<T> BFS(T t, Predicate<T> predicate) {
         return null;
     }

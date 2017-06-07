@@ -25,8 +25,6 @@ public interface MyBowGraph<T> {
 
     int bowCount();
 
-    MyBowGraph<T> MST();
-
     List<T> BFS(T t, Predicate<T> predicate);
 
     List<T> DFS(T t, Predicate<T> predicate);
