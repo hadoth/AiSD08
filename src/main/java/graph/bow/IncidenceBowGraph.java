@@ -7,25 +7,25 @@ import java.util.function.Predicate;
 /**
  * Created by Karol Pokomeda on 2017-06-01.
  */
-public class CoincidenceBowGraph<T> implements MyBowGraph<T> {
+public class IncidenceBowGraph<T> implements MyBowGraph<T> {
     private List<T> vertexList;
-    private int[][] coincidenceMatrix;
+    private int[][] incidenceMatrix;
 
-    public CoincidenceBowGraph() {
+    public IncidenceBowGraph() {
         this.vertexList = new ArrayList<>();
-        this.coincidenceMatrix = new int[0][0];
+        this.incidenceMatrix = new int[0][0];
     }
 
     @Override
     public boolean addVertex(T t) {
         if (!this.vertexList.contains(t)) {
-            int[][] newMatrix = this.coincidenceMatrix.length != 0 ? new int[this.coincidenceMatrix.length + 1][this.coincidenceMatrix[0].length] : new int[1][0];
-            for (int i = 0; i < this.coincidenceMatrix.length; i++) {
-                for (int j = 0; j < this.coincidenceMatrix[i].length; j++) {
-                    newMatrix[i][j] = this.coincidenceMatrix[i][j];
+            int[][] newMatrix = this.incidenceMatrix.length != 0 ? new int[this.incidenceMatrix.length + 1][this.incidenceMatrix[0].length] : new int[1][0];
+            for (int i = 0; i < this.incidenceMatrix.length; i++) {
+                for (int j = 0; j < this.incidenceMatrix[i].length; j++) {
+                    newMatrix[i][j] = this.incidenceMatrix[i][j];
                 }
             }
-            this.coincidenceMatrix = newMatrix;
+            this.incidenceMatrix = newMatrix;
             return this.vertexList.add(t);
         }
         return false;
@@ -40,15 +40,15 @@ public class CoincidenceBowGraph<T> implements MyBowGraph<T> {
                         && (end = this.vertexList.indexOf(t2)) >= 0
                         && !this.hasBow(t1, t2)
                 ) {
-            int[][] newMatrix = new int[this.coincidenceMatrix.length][this.coincidenceMatrix[0].length+1];
-            for (int i = 0; i < this.coincidenceMatrix.length; i++) {
-                for (int j = 0; j < this.coincidenceMatrix[i].length; j++) {
-                    newMatrix[i][j] = this.coincidenceMatrix[i][j];
+            int[][] newMatrix = new int[this.incidenceMatrix.length][this.incidenceMatrix[0].length+1];
+            for (int i = 0; i < this.incidenceMatrix.length; i++) {
+                for (int j = 0; j < this.incidenceMatrix[i].length; j++) {
+                    newMatrix[i][j] = this.incidenceMatrix[i][j];
                 }
             }
-            this.coincidenceMatrix = newMatrix;
-            this.coincidenceMatrix[start][this.coincidenceMatrix[start].length - 1] = weight;
-            this.coincidenceMatrix[end][this.coincidenceMatrix[end].length - 1] = -weight;
+            this.incidenceMatrix = newMatrix;
+            this.incidenceMatrix[start][this.incidenceMatrix[start].length - 1] = weight;
+            this.incidenceMatrix[end][this.incidenceMatrix[end].length - 1] = -weight;
             return true;
         } else {
             return false;
@@ -61,21 +61,21 @@ public class CoincidenceBowGraph<T> implements MyBowGraph<T> {
         if (vertexIndex < 0) {
             return false;
         }
-        for (int i = 0; i < this.coincidenceMatrix[vertexIndex].length; i++){
-            if (this.coincidenceMatrix[vertexIndex][i] != 0){
+        for (int i = 0; i < this.incidenceMatrix[vertexIndex].length; i++){
+            if (this.incidenceMatrix[vertexIndex][i] != 0){
                 return false;
             }
         }
         this.vertexList.remove(vertexIndex);
-        int[][] newMatrix = this.coincidenceMatrix.length == 1 ?
+        int[][] newMatrix = this.incidenceMatrix.length == 1 ?
                 new int[0][0]
-                : new int[this.coincidenceMatrix.length][this.coincidenceMatrix[0].length];
+                : new int[this.incidenceMatrix.length][this.incidenceMatrix[0].length];
         for (int i = 0, iPrim = 0; i < newMatrix.length; i++, iPrim++){
             for (int j = 0; j < newMatrix[0].length; j++){
                 if (i == vertexIndex){
                     iPrim++;
                 }
-                newMatrix[i][j] = this.coincidenceMatrix[iPrim][j];
+                newMatrix[i][j] = this.incidenceMatrix[iPrim][j];
             }
         }
         return true;
@@ -88,20 +88,20 @@ public class CoincidenceBowGraph<T> implements MyBowGraph<T> {
         if ((start = this.vertexList.indexOf(t1)) >= 0
                 && (end = this.vertexList.indexOf(t2)) >= 0){
             int bowIndex = -1;
-            for (int i = 0; i < this.coincidenceMatrix[start].length; i++){
-                if (this.coincidenceMatrix[start][i] != 0 && this.coincidenceMatrix[start][i] == -this.coincidenceMatrix[end][i]){
+            for (int i = 0; i < this.incidenceMatrix[start].length; i++){
+                if (this.incidenceMatrix[start][i] != 0 && this.incidenceMatrix[start][i] == -this.incidenceMatrix[end][i]){
                     bowIndex = i;
                     break;
                 }
             }
             if (bowIndex >= 0){
-                int[][] newMatrix = new int[this.coincidenceMatrix.length][this.coincidenceMatrix[0].length-1];
+                int[][] newMatrix = new int[this.incidenceMatrix.length][this.incidenceMatrix[0].length-1];
                 for (int i = 0; i < newMatrix.length; i++){
                     for (int j = 0, jPrim = 0; j < newMatrix[0].length; j++, jPrim++){
                         if (j == bowIndex) {
                             jPrim++;
                         }
-                        newMatrix[i][j] = this.coincidenceMatrix[i][jPrim];
+                        newMatrix[i][j] = this.incidenceMatrix[i][jPrim];
                     }
                 }
             }
@@ -120,8 +120,8 @@ public class CoincidenceBowGraph<T> implements MyBowGraph<T> {
         int end;
         if ((start = this.vertexList.indexOf(t1)) >= 0
                 && (end = this.vertexList.indexOf(t2)) >= 0){
-            for (int i = 0; i < this.coincidenceMatrix[start].length; i++){
-                if (this.coincidenceMatrix[start][i] != 0 && this.coincidenceMatrix[start][i] == -this.coincidenceMatrix[end][i]){
+            for (int i = 0; i < this.incidenceMatrix[start].length; i++){
+                if (this.incidenceMatrix[start][i] != 0 && this.incidenceMatrix[start][i] == -this.incidenceMatrix[end][i]){
                     return true;
                 }
             }
@@ -135,9 +135,9 @@ public class CoincidenceBowGraph<T> implements MyBowGraph<T> {
         int end;
         if ((start = this.vertexList.indexOf(t1)) >= 0
                 && (end = this.vertexList.indexOf(t2)) >= 0){
-            for (int i = 0; i < this.coincidenceMatrix[start].length; i++){
-                if (this.coincidenceMatrix[start][i] != 0 && this.coincidenceMatrix[start][i] == -this.coincidenceMatrix[end][i]){
-                    return this.coincidenceMatrix[start][i];
+            for (int i = 0; i < this.incidenceMatrix[start].length; i++){
+                if (this.incidenceMatrix[start][i] != 0 && this.incidenceMatrix[start][i] == -this.incidenceMatrix[end][i]){
+                    return this.incidenceMatrix[start][i];
                 }
             }
         }
@@ -151,7 +151,7 @@ public class CoincidenceBowGraph<T> implements MyBowGraph<T> {
 
     @Override
     public int bowCount() {
-        return this.coincidenceMatrix.length != 0 ? this.coincidenceMatrix[0].length : 0;
+        return this.incidenceMatrix.length != 0 ? this.incidenceMatrix[0].length : 0;
     }
 
     @Override
