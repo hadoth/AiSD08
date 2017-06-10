@@ -202,4 +202,39 @@ public class ListEdgeGraph<T> implements MyEdgeGraph<T> {
         }
         return true;
     }
+
+    public String toString(){
+        int maxLength = this.vertices.get(0).getValue().toString().length();
+        int pretender;
+        for (int i = 0; i < this.vertices.size(); i++) {
+            pretender = this.vertices.get(i).getValue().toString().length();
+            if (pretender > maxLength) {
+                maxLength = pretender;
+            }
+        }
+
+        StringBuilder result = new StringBuilder();
+        result.append(center("", maxLength)).append(" ");
+        for (Vertex<T> vertex : this.vertices) {
+            result.append(" ").append(center(vertex.getValue().toString(), maxLength)).append(" ");
+        }
+        for (Vertex<T> vertex : this.vertices) {
+            result.append('\n');
+            result.append(center(vertex.getValue().toString(), maxLength)).append(" ");
+            for (Vertex<T> neighbour : this.vertices){
+                result.append("[").append(center(Integer.toString(vertex.getNeighbourWeight(neighbour)), maxLength)).append("]");
+            }
+        }
+        return result.toString();
+    }
+
+    private static String center(String string, int length) {
+        if (length < string.length())
+            throw new IllegalArgumentException("String is longer than the designated placeholder");
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < (length - string.length()) / 2; i++) result.append(" ");
+        result.append(string);
+        while (result.length() < length) result.append(" ");
+        return result.toString();
+    }
 }
