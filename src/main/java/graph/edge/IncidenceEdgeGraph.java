@@ -1,5 +1,11 @@
 package graph.edge;
 
+import utils.Edge;
+import utils.comparator.NaturalComparator;
+import utils.comparator.ReverseComparator;
+import utils.queue.HeapQueue;
+import utils.queue.PriorityQueue;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -158,7 +164,40 @@ public class IncidenceEdgeGraph<T> implements MyEdgeGraph<T> {
 
     @Override
     public MyEdgeGraph<T> MST() {
-        return null;
+        // create empty graph for new tree representation
+        MyEdgeGraph<T> result = new MatrixEdgeGraph<T>();
+        if (this.vertexCount() == 0) return result;
+
+        // add first vertex to the tree
+        T vertexToAdd = this.vertexList.get(0);
+        result.addVertex(vertexToAdd);
+
+        // add edges connected with first element to the heap queue
+        PriorityQueue<Edge<T>> edgesToCheck = new HeapQueue<Edge<T>>(new ReverseComparator<Edge<T>>(new NaturalComparator<Edge<T>>()));
+        for (T neighbour : this.vertexList) {
+            if (this.hasEdge(vertexToAdd, neighbour)) {
+                edgesToCheck.add(new Edge<>(vertexToAdd, neighbour, this.edgeWeight(vertexToAdd, neighbour)));
+            }
+        }
+
+        while (!edgesToCheck.isEmpty()) {
+            Edge<T> edge = edgesToCheck.remove();
+            if (!result.hasVertex(edge.getDestination())) {
+                result.addVertex(edge.getDestination());
+                result.addEdge(edge.getSource(), edge.getDestination(), edge.getWeight());
+                vertexToAdd = edge.getDestination();
+                for (T neighbour : this.vertexList) {
+                    if (this.hasEdge(vertexToAdd, neighbour)) {
+                        edgesToCheck.add(new Edge<>(vertexToAdd, neighbour, this.edgeWeight(vertexToAdd, neighbour)));
+                    }
+                }
+            }
+        }
+
+        if (result.vertexCount() != this.vertexCount()) {
+            throw new NullPointerException("Graph is not consistent");
+        }
+        return result;
     }
 
     @Override
