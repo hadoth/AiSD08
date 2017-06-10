@@ -40,7 +40,7 @@ public class IncidenceEdgeGraph<T> implements MyEdgeGraph<T> {
                         && (end = this.vertexList.indexOf(t2)) >= 0
                         && !this.hasEdge(t1, t2)
                 ) {
-            int[][] newMatrix = new int[this.incidenceMatrix.length][this.incidenceMatrix[0].length+1];
+            int[][] newMatrix = new int[this.incidenceMatrix.length][this.incidenceMatrix[0].length + 1];
             for (int i = 0; i < this.incidenceMatrix.length; i++) {
                 for (int j = 0; j < this.incidenceMatrix[i].length; j++) {
                     newMatrix[i][j] = this.incidenceMatrix[i][j];
@@ -61,18 +61,18 @@ public class IncidenceEdgeGraph<T> implements MyEdgeGraph<T> {
         if (vertexIndex < 0) {
             return false;
         }
-        for (int i = 0; i < this.incidenceMatrix[vertexIndex].length; i++){
-            if (this.incidenceMatrix[vertexIndex][i] != 0){
+        for (int i = 0; i < this.incidenceMatrix[vertexIndex].length; i++) {
+            if (this.incidenceMatrix[vertexIndex][i] != 0) {
                 return false;
             }
         }
         this.vertexList.remove(vertexIndex);
         int[][] newMatrix = this.incidenceMatrix.length == 1 ?
                 new int[0][0]
-                : new int[this.incidenceMatrix.length][this.incidenceMatrix[0].length];
-        for (int i = 0, iPrim = 0; i < newMatrix.length; i++, iPrim++){
-            for (int j = 0; j < newMatrix[0].length; j++){
-                if (i == vertexIndex){
+                : new int[this.incidenceMatrix.length - 1][this.incidenceMatrix[0].length];
+        for (int i = 0, iPrim = 0; i < newMatrix.length; i++, iPrim++) {
+            for (int j = 0; j < newMatrix[0].length; j++) {
+                if (i == vertexIndex) {
                     iPrim++;
                 }
                 newMatrix[i][j] = this.incidenceMatrix[iPrim][j];
@@ -86,23 +86,26 @@ public class IncidenceEdgeGraph<T> implements MyEdgeGraph<T> {
         int start;
         int end;
         if ((start = this.vertexList.indexOf(t1)) >= 0
-                && (end = this.vertexList.indexOf(t2)) >= 0){
+                && (end = this.vertexList.indexOf(t2)) >= 0) {
             int bowIndex = -1;
-            for (int i = 0; i < this.incidenceMatrix[start].length; i++){
+            for (int i = 0; i < this.incidenceMatrix[start].length; i++) {
                 if (this.incidenceMatrix[start][i] != 0 && this.incidenceMatrix[start][i] == this.incidenceMatrix[end][i]){
                     bowIndex = i;
+                    break;
                 }
             }
-            if (bowIndex >= 0){
-                int[][] newMatrix = new int[this.incidenceMatrix.length][this.incidenceMatrix[0].length-1];
-                for (int i = 0; i < newMatrix.length; i++){
-                    for (int j = 0, jPrim = 0; j < newMatrix[0].length; j++, jPrim++){
+            if (bowIndex >= 0) {
+                int[][] newMatrix = new int[this.incidenceMatrix.length][this.incidenceMatrix[0].length - 1];
+                for (int i = 0; i < newMatrix.length; i++) {
+                    for (int j = 0, jPrim = 0; j < newMatrix[0].length; j++, jPrim++) {
                         if (j == bowIndex) {
                             jPrim++;
                         }
                         newMatrix[i][j] = this.incidenceMatrix[i][jPrim];
                     }
                 }
+                this.incidenceMatrix = newMatrix;
+                return true;
             }
         }
         return false;
@@ -118,8 +121,8 @@ public class IncidenceEdgeGraph<T> implements MyEdgeGraph<T> {
         int start;
         int end;
         if ((start = this.vertexList.indexOf(t1)) >= 0
-                && (end = this.vertexList.indexOf(t2)) >= 0){
-            for (int i = 0; i < this.incidenceMatrix[start].length; i++){
+                && (end = this.vertexList.indexOf(t2)) >= 0) {
+            for (int i = 0; i < this.incidenceMatrix[start].length; i++) {
                 if (this.incidenceMatrix[start][i] != 0 && this.incidenceMatrix[start][i] == this.incidenceMatrix[end][i]){
                     return true;
                 }
@@ -133,8 +136,8 @@ public class IncidenceEdgeGraph<T> implements MyEdgeGraph<T> {
         int start;
         int end;
         if ((start = this.vertexList.indexOf(t1)) >= 0
-                && (end = this.vertexList.indexOf(t2)) >= 0){
-            for (int i = 0; i < this.incidenceMatrix[start].length; i++){
+                && (end = this.vertexList.indexOf(t2)) >= 0) {
+            for (int i = 0; i < this.incidenceMatrix[start].length; i++) {
                 if (this.incidenceMatrix[start][i] != 0 && this.incidenceMatrix[start][i] == this.incidenceMatrix[end][i]){
                     return this.incidenceMatrix[start][i];
                 }
@@ -160,11 +163,93 @@ public class IncidenceEdgeGraph<T> implements MyEdgeGraph<T> {
 
     @Override
     public List<T> BFS(T t, Predicate<T> predicate) {
-        return null;
+        List<T> result = new ArrayList<>();
+        List<Integer> vertexIndexesToCheck = new ArrayList<>();
+        int checkedVertexIndex = this.vertexList.indexOf(t);
+        T checkedVertex;
+        if (this.vertexList.contains(t)) {
+            result.add(t);
+            if (predicate.test(t)) {
+                return result;
+            }
+            for (int i = 0; i < this.incidenceMatrix[checkedVertexIndex].length; i++) {
+                if (this.incidenceMatrix[checkedVertexIndex][i] != 0) {
+                    for (int j = 0; j < this.incidenceMatrix.length; j++) {
+                        if (this.incidenceMatrix[j][i] != 0 && j != checkedVertexIndex) {
+                            vertexIndexesToCheck.add(j);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            while (!vertexIndexesToCheck.isEmpty()){
+                checkedVertexIndex = vertexIndexesToCheck.remove(0);
+                checkedVertex = this.vertexList.get(checkedVertexIndex);
+                if (!result.contains(checkedVertex)){
+                    result.add(checkedVertex);
+                    if (predicate.test(checkedVertex)) {
+                        return result;
+                    }
+                    for (int i = 0; i < this.incidenceMatrix[checkedVertexIndex].length; i++) {
+                        if (this.incidenceMatrix[checkedVertexIndex][i] != 0) {
+                            for (int j = 0; j < this.incidenceMatrix.length; j++) {
+                                if (this.incidenceMatrix[j][i] != 0 && j != checkedVertexIndex) {
+                                    vertexIndexesToCheck.add(j);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return new ArrayList<>();
     }
 
     @Override
     public List<T> DFS(T t, Predicate<T> predicate) {
-        return null;
+        List<T> result = new ArrayList<>();
+        List<Integer> vertexIndexesToCheck = new ArrayList<>();
+        int checkedVertexIndex = this.vertexList.indexOf(t);
+        T checkedVertex;
+        if (this.vertexList.contains(t)) {
+            result.add(t);
+            if (predicate.test(t)) {
+                return result;
+            }
+            for (int i = 0; i < this.incidenceMatrix[checkedVertexIndex].length; i++) {
+                if (this.incidenceMatrix[checkedVertexIndex][i] != 0) {
+                    for (int j = 0; j < this.incidenceMatrix.length; j++) {
+                        if (this.incidenceMatrix[j][i] != 0 && j != checkedVertexIndex) {
+                            vertexIndexesToCheck.add(j);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            while (!vertexIndexesToCheck.isEmpty()){
+                checkedVertexIndex = vertexIndexesToCheck.remove(vertexIndexesToCheck.size() - 1);
+                checkedVertex = this.vertexList.get(checkedVertexIndex);
+                if (!result.contains(checkedVertex)){
+                    result.add(checkedVertex);
+                    if (predicate.test(checkedVertex)) {
+                        return result;
+                    }
+                    for (int i = 0; i < this.incidenceMatrix[checkedVertexIndex].length; i++) {
+                        if (this.incidenceMatrix[checkedVertexIndex][i] != 0) {
+                            for (int j = 0; j < this.incidenceMatrix.length; j++) {
+                                if (this.incidenceMatrix[j][i] != 0 && j != checkedVertexIndex) {
+                                    vertexIndexesToCheck.add(j);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return new ArrayList<>();
     }
 }

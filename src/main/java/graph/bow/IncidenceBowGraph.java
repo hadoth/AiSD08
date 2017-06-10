@@ -69,7 +69,7 @@ public class IncidenceBowGraph<T> implements MyBowGraph<T> {
         this.vertexList.remove(vertexIndex);
         int[][] newMatrix = this.incidenceMatrix.length == 1 ?
                 new int[0][0]
-                : new int[this.incidenceMatrix.length][this.incidenceMatrix[0].length];
+                : new int[this.incidenceMatrix.length - 1][this.incidenceMatrix[0].length];
         for (int i = 0, iPrim = 0; i < newMatrix.length; i++, iPrim++) {
             for (int j = 0; j < newMatrix[0].length; j++) {
                 if (i == vertexIndex) {
@@ -104,6 +104,8 @@ public class IncidenceBowGraph<T> implements MyBowGraph<T> {
                         newMatrix[i][j] = this.incidenceMatrix[i][jPrim];
                     }
                 }
+                this.incidenceMatrix = newMatrix;
+                return true;
             }
         }
         return false;
@@ -180,8 +182,8 @@ public class IncidenceBowGraph<T> implements MyBowGraph<T> {
                 checkedVertexIndex = vertexIndexesToCheck.remove(0);
                 checkedVertex = this.vertexList.get(checkedVertexIndex);
                 if (!result.contains(checkedVertex)){
-                    result.add(t);
-                    if (predicate.test(t)) {
+                    result.add(checkedVertex);
+                    if (predicate.test(checkedVertex)) {
                         return result;
                     }
                     for (int i = 0; i < this.incidenceMatrix[checkedVertexIndex].length; i++) {
@@ -202,6 +204,47 @@ public class IncidenceBowGraph<T> implements MyBowGraph<T> {
 
     @Override
     public List<T> DFS(T t, Predicate<T> predicate) {
-        return null;
+        List<T> result = new ArrayList<>();
+        List<Integer> vertexIndexesToCheck = new ArrayList<>();
+        int checkedVertexIndex = this.vertexList.indexOf(t);
+        T checkedVertex;
+        if (this.vertexList.contains(t)) {
+            result.add(t);
+            if (predicate.test(t)) {
+                return result;
+            }
+            for (int i = 0; i < this.incidenceMatrix[checkedVertexIndex].length; i++) {
+                if (this.incidenceMatrix[checkedVertexIndex][i] != 0) {
+                    for (int j = 0; j < this.incidenceMatrix.length; j++) {
+                        if (this.incidenceMatrix[j][i] != 0 && j != checkedVertexIndex) {
+                            vertexIndexesToCheck.add(j);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            while (!vertexIndexesToCheck.isEmpty()){
+                checkedVertexIndex = vertexIndexesToCheck.remove(vertexIndexesToCheck.size() - 1);
+                checkedVertex = this.vertexList.get(checkedVertexIndex);
+                if (!result.contains(checkedVertex)){
+                    result.add(checkedVertex);
+                    if (predicate.test(checkedVertex)) {
+                        return result;
+                    }
+                    for (int i = 0; i < this.incidenceMatrix[checkedVertexIndex].length; i++) {
+                        if (this.incidenceMatrix[checkedVertexIndex][i] != 0) {
+                            for (int j = 0; j < this.incidenceMatrix.length; j++) {
+                                if (this.incidenceMatrix[j][i] != 0 && j != checkedVertexIndex) {
+                                    vertexIndexesToCheck.add(j);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return new ArrayList<>();
     }
 }
