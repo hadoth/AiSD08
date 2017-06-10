@@ -1,4 +1,6 @@
 import graph.bow.IncidenceBowGraph;
+import graph.bow.ListBowGraph;
+import graph.bow.MatrixBowGraph;
 import graph.bow.MyBowGraph;
 
 import java.util.Arrays;
@@ -10,8 +12,8 @@ import java.util.List;
 public class ListEightExerciseTwoTestA {
     public static void main(String[] args) {
 //        MyBowGraph<Character> myGraph = new MatrixBowGraph<>();
-//        MyBowGraph<Character> myGraph = new ListBowGraph<>();
-        MyBowGraph<Character> myGraph = new IncidenceBowGraph<>();
+        MyBowGraph<Character> myGraph = new ListBowGraph<>();
+//        MyBowGraph<Character> myGraph = new IncidenceBowGraph<>();
         char[] characters = {'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x'};
         for (int i = 0; i < characters.length; i++) {
             myGraph.addVertex(characters[i]);
