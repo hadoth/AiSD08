@@ -1,10 +1,10 @@
 package graph.edge;
 
-import utils.Edge;
 import utils.comparator.NaturalComparator;
 import utils.comparator.ReverseComparator;
 import utils.queue.HeapQueue;
 import utils.queue.PriorityQueue;
+import utils.storage.Edge;
 
 import java.util.ArrayList;
 import java.util.List;

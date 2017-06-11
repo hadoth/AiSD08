@@ -1,4 +1,4 @@
-package utils;
+package utils.storage;
 
 /**
  * Created by Karol Pokomeda on 2017-05-31.

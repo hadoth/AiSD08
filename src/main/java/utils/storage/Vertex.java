@@ -1,4 +1,4 @@
-package utils;
+package utils.storage;
 
 import java.util.ArrayList;
 import java.util.HashMap;

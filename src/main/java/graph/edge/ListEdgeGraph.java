@@ -1,11 +1,11 @@
 package graph.edge;
 
-import utils.Edge;
-import utils.Vertex;
 import utils.comparator.NaturalComparator;
 import utils.comparator.ReverseComparator;
 import utils.queue.HeapQueue;
 import utils.queue.PriorityQueue;
+import utils.storage.Edge;
+import utils.storage.Vertex;
 
 import java.util.ArrayList;
 import java.util.List;

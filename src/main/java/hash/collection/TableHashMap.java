@@ -1,7 +1,7 @@
 package hash.collection;
 
 import hash.function.HashFunction;
-import utils.StorageElement;
+import utils.storage.StorageElement;
 
 /**
  * Created by Karol Pokomeda on 2017-05-24.

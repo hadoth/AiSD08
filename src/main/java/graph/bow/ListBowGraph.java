@@ -1,6 +1,6 @@
 package graph.bow;
 
-import utils.Vertex;
+import utils.storage.Vertex;
 
 import java.util.ArrayList;
 import java.util.List;
