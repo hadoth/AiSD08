@@ -1,5 +1,6 @@
 package graph.edge;
 
+import utils.StringFormatter;
 import utils.comparator.NaturalComparator;
 import utils.comparator.ReverseComparator;
 import utils.queue.HeapQueue;
@@ -258,27 +259,17 @@ public class MatrixEdgeGraph<T> implements MyEdgeGraph<T> {
         }
 
         StringBuilder result = new StringBuilder();
-        result.append(center("", maxLength)).append(" ");
+        result.append(StringFormatter.center("", maxLength)).append(" ");
         for (T t : this.vertices) {
-            result.append(" ").append(center(t.toString(), maxLength)).append(" ");
+            result.append(" ").append(StringFormatter.center(t.toString(), maxLength)).append(" ");
         }
         for (int i = 0; i < this.vertexCount(); i++) {
             result.append('\n');
-            result.append(center(this.vertices.get(i).toString(), maxLength)).append(" ");
+            result.append(StringFormatter.center(this.vertices.get(i).toString(), maxLength)).append(" ");
             for (int j = 0; j < this.vertexCount(); j++) {
-                result.append("[").append(center(String.valueOf(this.neighbourMatrix[i][j]), maxLength)).append("]");
+                result.append("[").append(StringFormatter.center(String.valueOf(this.neighbourMatrix[i][j]), maxLength)).append("]");
             }
         }
-        return result.toString();
-    }
-
-    private static String center(String string, int length) {
-        if (length < string.length())
-            throw new IllegalArgumentException("String is longer than the designated placeholder");
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < (length - string.length()) / 2; i++) result.append(" ");
-        result.append(string);
-        while (result.length() < length) result.append(" ");
         return result.toString();
     }
 }
