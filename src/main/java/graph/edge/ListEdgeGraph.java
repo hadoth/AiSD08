@@ -1,5 +1,6 @@
 package graph.edge;
 
+import utils.StringFormatter;
 import utils.comparator.NaturalComparator;
 import utils.comparator.ReverseComparator;
 import utils.queue.HeapQueue;
@@ -214,27 +215,17 @@ public class ListEdgeGraph<T> implements MyEdgeGraph<T> {
         }
 
         StringBuilder result = new StringBuilder();
-        result.append(center("", maxLength)).append(" ");
+        result.append(StringFormatter.center("", maxLength)).append(" ");
         for (Vertex<T> vertex : this.vertices) {
-            result.append(" ").append(center(vertex.getValue().toString(), maxLength)).append(" ");
+            result.append(" ").append(StringFormatter.center(vertex.getValue().toString(), maxLength)).append(" ");
         }
         for (Vertex<T> vertex : this.vertices) {
             result.append('\n');
-            result.append(center(vertex.getValue().toString(), maxLength)).append(" ");
+            result.append(StringFormatter.center(vertex.getValue().toString(), maxLength)).append(" ");
             for (Vertex<T> neighbour : this.vertices){
-                result.append("[").append(center(Integer.toString(vertex.getNeighbourWeight(neighbour)), maxLength)).append("]");
+                result.append("[").append(StringFormatter.center(Integer.toString(vertex.getNeighbourWeight(neighbour)), maxLength)).append("]");
             }
         }
-        return result.toString();
-    }
-
-    private static String center(String string, int length) {
-        if (length < string.length())
-            throw new IllegalArgumentException("String is longer than the designated placeholder");
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < (length - string.length()) / 2; i++) result.append(" ");
-        result.append(string);
-        while (result.length() < length) result.append(" ");
         return result.toString();
     }
 }
