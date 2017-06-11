@@ -1,5 +1,7 @@
 package graph.bow;
 
+import utils.StringFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -246,5 +248,39 @@ public class IncidenceBowGraph<T> implements MyBowGraph<T> {
             }
         }
         return new ArrayList<>();
+    }
+
+    public String toString(){
+        int maxLength = this.vertexList.get(0).toString().length();
+        int pretender;
+        for (int i = 1; i < this.vertexList.size(); i++) {
+            pretender = this.vertexList.get(i).toString().length();
+            if (pretender > maxLength) {
+                maxLength = pretender;
+            }
+        }
+        for (int i = 0; i < this.incidenceMatrix.length; i++){
+            for (int j = 0; j < this.incidenceMatrix[i].length; j++) {
+                pretender = String.valueOf(this.incidenceMatrix[i][j]).length();
+                if (pretender > maxLength) {
+                    maxLength = pretender;
+                }
+            }
+        }
+
+        StringBuilder result = new StringBuilder();
+        result.append(StringFormatter.center("", maxLength)).append(" ");
+        for (T vertex : this.vertexList) {
+            result.append(" ").append(StringFormatter.center(vertex.toString(), maxLength)).append(" ");
+        }
+        for (T vertex : this.vertexList) {
+            result.append('\n');
+            result.append(StringFormatter.center(vertex.toString(), maxLength)).append(" ");
+            for (T neighbour : this.vertexList){
+                int bowWeight = this.bowWeight(vertex, neighbour);
+                result.append("[").append(StringFormatter.center(Integer.toString(bowWeight), maxLength)).append("]");
+            }
+        }
+        return result.toString();
     }
 }
