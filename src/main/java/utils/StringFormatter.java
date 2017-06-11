@@ -8,7 +8,7 @@ public class StringFormatter {
         if (length < string.length())
             throw new IllegalArgumentException("String is longer than the designated placeholder");
         StringBuilder result = new StringBuilder();
-        for (int i = 0; i < (length - string.length()) / 2; i++) result.append(" ");
+        for (int i = 0; i < (length - string.length()+1) / 2; i++) result.append(" ");
         result.append(string);
         while (result.length() < length) result.append(" ");
         return result.toString();
