@@ -1,6 +1,4 @@
-import graph.bow.IncidenceBowGraph;
 import graph.bow.ListBowGraph;
-import graph.bow.MatrixBowGraph;
 import graph.bow.MyBowGraph;
 
 import java.util.Arrays;
@@ -47,6 +45,8 @@ public class ListEightExerciseTwoTestA {
         System.out.println(myGraph.vertexCount());
         System.out.println(myGraph.deleteVertex('x'));
         System.out.println(myGraph.vertexCount());
+
+        System.out.println(myGraph);
 
         List<Character> BFS = myGraph.BFS('p', (Character character) -> character.equals('w'));
         System.out.println(Arrays.toString(BFS.toArray()));

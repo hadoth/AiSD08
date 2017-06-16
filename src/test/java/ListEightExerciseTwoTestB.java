@@ -1,4 +1,3 @@
-import graph.edge.IncidenceEdgeGraph;
 import graph.edge.ListEdgeGraph;
 import graph.edge.MyEdgeGraph;
 
@@ -11,8 +10,8 @@ import java.util.List;
 public class ListEightExerciseTwoTestB {
     public static void main(String[] args) {
 //        MyEdgeGraph<Character> myGraph = new MatrixEdgeGraph<>();
-//        MyEdgeGraph<Character> myGraph = new ListEdgeGraph<>();
-        MyEdgeGraph<Character> myGraph = new IncidenceEdgeGraph<>();
+        MyEdgeGraph<Character> myGraph = new ListEdgeGraph<>();
+//        MyEdgeGraph<Character> myGraph = new IncidenceEdgeGraph<>();
         char[] characters = {'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x'};
         for (int i = 0; i < characters.length; i++) {
             myGraph.addVertex(characters[i]);
